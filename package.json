@@ -1,0 +1,32 @@
+{
+  "name": "kozepelo",
+  "version": "1.0.0",
+  "description": "Közepelő – TXT párosító és közepelő (Electron + Python)",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "dist:win": "electron-builder -w"
+  },
+  "devDependencies": {
+    "electron": "^30.0.0",
+    "electron-builder": "^24.13.3"
+  },
+  "build": {
+    "appId": "hu.kozepelo.app",
+    "productName": "Közepelő",
+    "files": [
+      "index.html",
+      "renderer.js",
+      "preload.js",
+      "main.js",
+      "feldolgozo.py"
+    ],
+    "extraResources": [
+      { "from": "python-win", "to": "python-win" }
+    ],
+    "win": {
+      "target": "nsis",
+      "artifactName": "${productName}-Setup-${version}.exe"
+    }
+  }
+}

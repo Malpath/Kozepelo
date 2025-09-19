@@ -1,0 +1,353 @@
+<!doctype html>
+<html lang="hu">
+<head>
+  <meta charset="utf-8" />
+  <title>Közepelő</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    :root {
+      --bg: #0b1020;
+      --panel: #121a2e;
+      --muted: #7b89a6;
+      --text: #e7efff;
+      --accent: #3b82f6;
+      --accent-2: #22c55e;
+      --border: #1f2a4a;
+      --danger: #ef4444;
+      --shadow: 0 8px 20px rgba(0, 0, 0, .35);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+    
+    html, body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+    }
+    
+    body {
+      background: linear-gradient(180deg, #0b1020 0%, #0d1530 100%);
+      color: var(--text);
+      font-family: ui-sans-serif, system-ui, Segoe UI, Roboto, Arial, sans-serif;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+
+    /* App bar */
+    .appbar {
+      position: sticky;
+      top: 0;
+      z-index: 5;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 16px;
+      background: rgba(13, 21, 48, .8);
+      backdrop-filter: blur(8px);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .logo {
+      width: 34px;
+      height: 34px;
+      display: grid;
+      place-items: center;
+      background: #162142;
+      color: #88a6ff;
+      border-radius: 10px;
+      box-shadow: var(--shadow);
+    }
+
+    .appbar h1 {
+      font-size: 18px;
+      margin: 0;
+    }
+
+    .subtitle {
+      font-size: 12px;
+      color: var(--muted);
+    }
+    
+    .toolbar {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .filelabel {
+      color: var(--muted);
+      font-size: 12px;
+      max-width: 360px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    /* Layout */
+    .layout {
+      display: grid;
+      grid-template-columns: 300px 1fr;
+      gap: 16px;
+      padding: 16px;
+      flex: 1;
+      overflow: hidden;
+    }
+
+    .sidebar {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      position: sticky;
+      top: 16px;
+      align-self: start;
+    }
+
+    .panel {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 14px;
+      box-shadow: var(--shadow);
+    }
+
+    .panel-title {
+      font-weight: 600;
+      margin-bottom: 10px;
+      color: #b9c8ff;
+    }
+
+    /* Buttons */
+    button {
+      font: inherit;
+      color: inherit;
+      appearance: none;
+    }
+
+    .btn {
+      width: 100%;
+      padding: 10px 12px;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      background: #172243;
+      color: var(--text);
+      cursor: pointer;
+      transition: .15s transform, .15s background;
+    }
+
+    .btn:hover {
+      transform: translateY(-1px);
+      background: #1a2750;
+    }
+
+    .btn.primary {
+      background: linear-gradient(180deg, #4479ff, #3b6be0);
+      border-color: #375fce;
+    }
+
+    .btn.primary:hover {
+      background: linear-gradient(180deg, #5085ff, #4172ea);
+    }
+
+    .segmented {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 8px;
+    }
+
+    .seg {
+      width: 100%;
+      padding: 10px 12px;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      background: #121b39;
+      color: var(--text);
+      cursor: pointer;
+      transition: .15s box-shadow, .15s transform;
+    }
+
+    .seg:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 8px 24px rgba(59, 130, 246, .25);
+    }
+
+    .seg.active {
+      outline: 2px solid var(--accent);
+      background: #142153;
+    }
+
+    /* Content */
+    .content {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      overflow-y: auto;
+      height: 100%;
+      min-height: 0;
+    }
+    
+    .output-wrap {
+      position: relative;
+      flex: 1;
+      min-height: 520px;
+      background: #091128;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    .output {
+      margin: 0;
+      padding: 16px;
+      height: 100%;
+      width: 100%;
+      color: #cfe0ff;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      white-space: pre-wrap;
+      overflow: auto;
+      line-height: 1.35;
+    }
+
+    .placeholder {
+      opacity: .65;
+    }
+
+    /* Spinner */
+    .spinner {
+      position: absolute;
+      inset: auto 16px 16px auto;
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      border: 3px solid rgba(255, 255, 255, .15);
+      border-top-color: #7aa2ff;
+      animation: spin 1s linear infinite;
+      display: none;
+    }
+
+    body.busy .spinner {
+      display: block;
+    }
+
+    @keyframes spin {
+      to {
+        transform: rotate(360deg);
+      }
+    }
+    
+    /* Footer */
+    .footer {
+      border-top: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 16px;
+      color: var(--muted);
+      background: rgba(13, 21, 48, .5);
+    }
+    
+    .status {
+      font-size: 13px;
+      color: #c9d7ff;
+      background: #0f1a38;
+      padding: 8px 10px;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+    }
+
+    .status.ok {
+      color: #9fe3b3;
+      border-color: #224a34;
+      background: #0f2a21;
+    }
+
+    .status.warn {
+      color: #ffe29d;
+      border-color: #4a3c22;
+      background: #2a210f;
+    }
+
+    .status.err {
+      color: #ffb4b4;
+      border-color: #4a2222;
+      background: #2a0f0f;
+    }
+
+    .output::-webkit-scrollbar {
+      width: 10px;
+      height: 10px;
+    }
+
+    .output::-webkit-scrollbar-thumb {
+      background: #1e2b56;
+      border-radius: 10px;
+    }
+
+    .output::-webkit-scrollbar-track {
+      background: #0d1530;
+    }
+  </style>
+</head>
+<body class="shell">
+  <header class="appbar">
+    <div class="brand">
+      <div class="logo" aria-hidden="true">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M12 2l3.09 6.26L22 9.27l-5 4.86L18.18 22 12 18.9 5.82 22 7 14.13l-5-4.86 6.91-1.01L12 2z" />
+        </svg>
+      </div>
+      <h1>Közepelő</h1>
+      <span class="subtitle">TXT párosító és közepelő</span>
+    </div>
+    <div class="toolbar">
+      <button id="btnLoad" class="btn primary" style="width:auto">TXT betöltés</button>
+      <span id="filePathLabel" class="filelabel">Nincs megnyitott fájl</span>
+    </div>
+  </header>
+
+  <main class="layout">
+    <aside class="sidebar">
+      <div class="panel">
+        <div class="panel-title">Lépések</div>
+        <div class="segmented">
+          <button class="seg step" id="btnStep1" title="Irányszög törlés + párok + PÁRATLAN jelölés">1. Előkészítés</button>
+          <button class="seg step" id="btnStep2a" title="Köztes nézet – speciális első ID szabállyal">2/A Köztes</button>
+          <button class="seg step" id="btnStep2b" title="Tiszta végső nézet – minden ID-ból 2 sor">2/B Letisztázott</button>
+        </div>
+      </div>
+      <div class="panel">
+        <div class="panel-title">Műveletek</div>
+        <button id="btnExport" class="btn">Export</button>
+      </div>
+      <div class="panel">
+        <div class="panel-title">Állapot</div>
+        <div id="status" class="status">Készenlét</div>
+      </div>
+    </aside>
+
+    <section class="content">
+      <div class="output-wrap">
+        <pre id="output" class="output placeholder">Itt fog megjelenni a kimenet (1. lépés / 2A / 2B)…</pre>
+        <div id="spinner" class="spinner" aria-hidden="true"></div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div>© Közepelő</div>
+    <div id="footInfo">—</div>
+  </footer>
+
+  <script src="renderer.js"></script>
+  <script>document.title = 'Közepelő';</script>
+</body>
+</html>
