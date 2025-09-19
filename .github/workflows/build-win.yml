@@ -22,7 +22,7 @@ jobs:
           copy dist\\feldolgozo.exe python-win\\feldolgozo.exe
 
       - name: Install Node deps
-        run: npm ci
+        run: npm install
 
       - name: Build Electron (Windows)
         run: npx electron-builder -w
