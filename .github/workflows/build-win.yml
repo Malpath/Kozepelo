@@ -25,7 +25,7 @@ jobs:
         run: npm install
 
       - name: Build Electron (Windows)
-        run: npx electron-builder -w
+        run: npx electron-builder -w -p never
 
       - name: Upload Windows installer
         uses: actions/upload-artifact@v4
